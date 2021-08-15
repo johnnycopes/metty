@@ -1,0 +1,14 @@
+<mat-form-field appearance="fill">
+  <mat-label>Departments</mat-label>
+  <mat-select
+    [formControl]="departments"
+    multiple
+  >
+    <mat-option
+      *ngFor="let department of departments$ | async"
+      [value]="department.departmentId"
+    >
+      {{department.displayName}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
