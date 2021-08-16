@@ -7,14 +7,14 @@ import { IDepartment } from "../models/department.interface";
 
 interface IGetObjectsArgs {
   /** Returns any objects in a specific department */
-  departmentIds?: number[];
+  departmentIds?: ReadonlyArray<number>;
 }
 
 interface IGetObjectsResponse {
   /** The total number of publicly-available objects */
   total: number;
   /** An array containing the object ID of publicly-available object */
-  objectIds: number[];
+  objectIDs: ReadonlyArray<number>;
 }
 
 @Injectable({
@@ -40,9 +40,6 @@ export class MetService {
       },
     };
     return this._http
-      .get<IGetObjectsResponse>(this._apiUrl + "objects", options)
-      .pipe(
-        tap(objects => console.log("objects", objects))
-      );
+      .get<IGetObjectsResponse>(this._apiUrl + "objects", options);
   }
 }

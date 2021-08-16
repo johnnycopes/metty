@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
@@ -11,6 +12,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { ShellComponent } from './components/shell/shell.component';
+import { departmentsReducer } from "./store/departments.reducer";
 
 @NgModule({
   declarations: [
@@ -23,8 +25,11 @@ import { ShellComponent } from './components/shell/shell.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({}, {}),
+    StoreModule.forRoot({
+      departments: departmentsReducer,
+    }),
     HttpClientModule,
+    MatButtonModule,
     MatChipsModule,
     MatListModule,
     MatSelectModule,

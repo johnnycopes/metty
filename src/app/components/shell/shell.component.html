@@ -12,3 +12,17 @@
     </mat-option>
   </mat-select>
 </mat-form-field>
+<button
+  mat-button
+  (click)="onSearch()"
+>
+  Search
+</button>
+
+<hr />
+
+<mat-list>
+  <mat-list-item *ngFor="let object of objects$ | async">
+    {{ object }}
+  </mat-list-item>
+</mat-list>
