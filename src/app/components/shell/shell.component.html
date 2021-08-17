@@ -22,7 +22,10 @@
 <hr />
 
 <mat-list>
-  <mat-list-item *ngFor="let object of objects$ | async">
+  <mat-list-item
+    *ngFor="let object of objectIds$ | async"
+    (click)="onClick(object)"
+  >
     {{ object }}
   </mat-list-item>
 </mat-list>
