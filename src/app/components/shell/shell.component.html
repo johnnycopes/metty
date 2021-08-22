@@ -8,7 +8,7 @@
       *ngFor="let department of departments$ | async"
       [value]="department.departmentId"
     >
-      {{department.displayName}}
+      {{ department.displayName }}
     </mat-option>
   </mat-select>
 </mat-form-field>
@@ -23,9 +23,9 @@
 
 <mat-list>
   <mat-list-item
-    *ngFor="let object of objectIds$ | async"
+    *ngFor="let object of objects$ | async"
     (click)="onClick(object)"
   >
-    {{ object }}
+    {{ object.title }}
   </mat-list-item>
 </mat-list>

@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { select, Store } from "@ngrx/store";
-import { Observable, Subject, Subscription } from "rxjs";
+import { forkJoin, Observable, Subject, Subscription } from "rxjs";
 import { map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 
 import { IDepartment } from "src/app/models/department.interface";
+import { IObject } from "src/app/models/object.interface";
 import { MetService } from "src/app/services/met.service";
 import { selectDepartments } from "src/app/store/app.selectors";
 import { IAppState } from "src/app/store/app.state";
@@ -17,9 +18,7 @@ import { updateDepartments } from "src/app/store/departments.actions";
 })
 export class ShellComponent implements OnInit, OnDestroy {
   public searchAction$: Subject<void> = new Subject();
-  public clickAction$: Subject<number> = new Subject();
-
-  public objectIds$: Observable<number[]>;
+  public objects$: Observable<IObject[]>;
   public departments$: Observable<IDepartment[]>;
   public departments: FormControl = new FormControl();
   private _subscription: Subscription = new Subscription();
@@ -41,29 +40,26 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.searchAction$.next();
   }
 
-  public onClick(objectId: number): void {
-    this.clickAction$.next(objectId);
+  public onClick(object: IObject): void {
+    console.log(object.objectID, object);
   }
 
   private _initializeObservables(): void {
     const valueChanges$ = this.departments.valueChanges.subscribe(
       values => this._store.dispatch(updateDepartments({ departmentIds: values }))
     );
-    const click$ = this.clickAction$.pipe(
-      switchMap(objectId => this._metService.getObject(objectId))
-    ).subscribe(console.log);
-
     this._subscription.add(valueChanges$);
-    this._subscription.add(click$);
 
     this.departments$ = this._metService.getDepartments();
-    this.objectIds$ = this.searchAction$.pipe(
+    this.objects$ = this.searchAction$.pipe(
       withLatestFrom(this._store.pipe(
         select(selectDepartments)
       ))
     ).pipe(
       switchMap(([_, departmentIds]) => this._metService.getObjects({ departmentIds })),
-      map(response => response.objectIDs.slice(0, 50)),
+      map(response => response.objectIDs.slice(0, 25)),
+      map(ids => ids.map(id => this._metService.getObject(id))),
+      switchMap(objects => forkJoin(objects))
     );
   }
 }
