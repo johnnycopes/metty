@@ -1,43 +1,30 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
 import { select, Store } from "@ngrx/store";
-import { forkJoin, Observable, Subject, Subscription } from "rxjs";
-import { map, switchMap, tap, withLatestFrom } from "rxjs/operators";
+import { forkJoin, Observable, Subject } from "rxjs";
+import { map, switchMap, withLatestFrom } from "rxjs/operators";
 
-import { IDepartment } from "src/app/models/department.interface";
 import { IObject } from "src/app/models/object.interface";
 import { MetService } from "src/app/services/met.service";
+import { EEvent, EventService } from "src/app/services/event.service";
 import { selectDepartments } from "src/app/store/app.selectors";
 import { IAppState } from "src/app/store/app.state";
-import { updateDepartments } from "src/app/store/departments.actions";
 
 @Component({
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss']
 })
-export class ShellComponent implements OnInit, OnDestroy {
-  public searchAction$: Subject<void> = new Subject();
+export class ShellComponent implements OnInit {
   public objects$: Observable<IObject[]>;
-  public departments$: Observable<IDepartment[]>;
-  public departments: FormControl = new FormControl();
-  private _subscription: Subscription = new Subscription();
 
   constructor(
     private _metService: MetService,
+    private _eventService: EventService,
     private _store: Store<IAppState>,
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._initializeObservables();
-  }
-
-  public ngOnDestroy(): void {
-    this._subscription.unsubscribe();
-  }
-
-  public onSearch(): void {
-    this.searchAction$.next();
   }
 
   public onClick(object: IObject): void {
@@ -45,13 +32,7 @@ export class ShellComponent implements OnInit, OnDestroy {
   }
 
   private _initializeObservables(): void {
-    const valueChanges$ = this.departments.valueChanges.subscribe(
-      values => this._store.dispatch(updateDepartments({ departmentIds: values }))
-    );
-    this._subscription.add(valueChanges$);
-
-    this.departments$ = this._metService.getDepartments();
-    this.objects$ = this.searchAction$.pipe(
+    this.objects$ = this._eventService.listen(EEvent.search).pipe(
       withLatestFrom(this._store.pipe(
         select(selectDepartments)
       ))
