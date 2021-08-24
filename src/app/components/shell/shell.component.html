@@ -1,12 +1,3 @@
 <app-search></app-search>
 
-<hr />
-
-<mat-list>
-  <mat-list-item
-    *ngFor="let object of objects$ | async"
-    (click)="onClick(object)"
-  >
-    {{ object.title }}
-  </mat-list-item>
-</mat-list>
+<app-objects></app-objects>

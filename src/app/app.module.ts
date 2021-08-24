@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ObjectsComponent } from './components/objects/objects.component';
 import { SearchComponent } from './components/search/search.component';
 import { ShellComponent } from './components/shell/shell.component';
 import { departmentsReducer } from "./store/departments.reducer";
@@ -18,6 +19,7 @@ import { departmentsReducer } from "./store/departments.reducer";
 @NgModule({
   declarations: [
     AppComponent,
+    ObjectsComponent,
     SearchComponent,
     ShellComponent,
   ],

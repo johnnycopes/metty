@@ -1,0 +1,17 @@
+<mat-list>
+  <mat-list-item
+    *ngFor="let object of objects$ | async"
+    (click)="onClick(object)"
+  >
+    <img matListAvatar
+      [src]="object.primaryImageSmall"
+    />
+    <h3 matLine>
+      {{ object.objectName }}
+    </h3>
+    <p matLine>
+      <span>{{ object.culture }}</span>
+      <span> -- {{ object.objectDate }}</span>
+    </p>
+  </mat-list-item>
+</mat-list>
