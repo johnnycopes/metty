@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Observable, Subscription } from "rxjs";
@@ -8,6 +8,8 @@ import { updateDepartments } from "src/app/store/departments.actions";
 import { IDepartment } from "src/app/models/department.interface";
 import { MetService } from "src/app/services/met.service";
 import { EEvent, EventService } from "src/app/services/event.service";
+import { tap } from 'rxjs/operators';
+import { $D } from 'rxjs-debug';
 
 @Component({
   selector: 'app-search',
@@ -38,7 +40,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
-  public onClick(): void {
+  public onSearch(): void {
     this._eventService.send({ type: EEvent.search });
+  }
+
+  public onClear(): void {
+    this.departments.reset();
+    this.onSearch();
   }
 }

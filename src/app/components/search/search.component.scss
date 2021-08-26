@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mat-form-field {
+  flex-basis: 70%;
+}
+
+.mat-button-base {
+  flex-basis: 14%;
+  margin-bottom: 1.34375em;
+}

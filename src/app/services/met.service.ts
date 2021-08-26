@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map, tap } from "rxjs/operators"
 ;
 import { IDepartment } from "../models/department.interface";
@@ -29,16 +29,18 @@ export class MetService {
     total: number;
     objectIDs: ReadonlyArray<number>;
   }> {
-    const options = {
-      params: {
-        departmentIds: departmentIds?.join("|") ?? "",
-      },
-    };
+    if (!departmentIds) {
+      return of({ total: 0, objectIDs: [] });
+    }
     return this._http
       .get<{
         total: number;
         objectIDs: ReadonlyArray<number>;
-      }>(this._apiUrl + "/objects", options);
+      }>(this._apiUrl + "/objects", {
+        params: {
+          departmentIds: departmentIds?.join("|"),
+        },
+      });
   }
 
   public getObject(id: number): Observable<IObject> {

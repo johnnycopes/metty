@@ -3,6 +3,7 @@
   <mat-select
     [formControl]="departments"
     multiple
+    #select="matSelect"
   >
     <mat-option
       *ngFor="let department of departments$ | async"
@@ -13,8 +14,18 @@
   </mat-select>
 </mat-form-field>
 <button
-  mat-button
-  (click)="onClick()"
+  mat-flat-button
+  color="primary"
+  [disabled]="select.empty"
+  (click)="onSearch()"
 >
   Search
+</button>
+<button
+  mat-flat-button
+  color="accent"
+  [disabled]="select.empty"
+  (click)="onClear()"
+>
+  Clear
 </button>

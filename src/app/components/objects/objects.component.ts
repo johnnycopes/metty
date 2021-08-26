@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { withLatestFrom, switchMap, map } from 'rxjs/operators';
 
 import { IAppState } from 'src/app/store/app.state';
@@ -30,9 +30,16 @@ export class ObjectsComponent implements OnInit {
       ))
     ).pipe(
       switchMap(([_, departmentIds]) => this._metService.getObjects({ departmentIds })),
-      map(response => response.objectIDs.slice(0, 25)),
-      map(ids => ids.map(id => this._metService.getObject(id))),
-      switchMap(objects => forkJoin(objects))
+      map(response => response.objectIDs
+        .slice(0, 25)
+        .map(id => this._metService.getObject(id))
+      ),
+      switchMap(objects => {
+        if (!objects.length) {
+          return of([]);
+        }
+        return forkJoin(objects);
+      }),
     );
   }
 
